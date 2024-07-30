@@ -1,0 +1,84 @@
+<p style="color: green"><%= notice %></p>
+
+<% content_for :title, "Users" %>
+<div class= "Container">
+  <div class="row" >
+    <div class="col-lg-10 mx-md-auto">
+      <h1>Users</h1>
+        <%= link_to "New user", new_user_path, remote: true, class: "btn btn-primary btn-lgs mb-4", data: { bs_toggle: "modal", bs_target: "#newUserModal", loacl: false } %>
+
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Contact</th>
+              <th colspan="3"></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <% @users.each do |user| %>
+              <tr>
+                <td><%= user.name%></td>
+                <td><%= user.email%></td>
+                <td><%= user.contact%></td>
+                <td><%= link_to 'Show',user %></td>
+                <td><%= link_to 'Edit',edit_user_path(user) %></td>
+                <td><%= link_to 'Destroy',user, method: :delete, data: {confirm: 'Are you sure?'}%>
+              </tr>
+            <%end%>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>
+      
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="newUserModal" tabindex="-1" role="dialog" aria-labelledby="newUserModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="newUserModal">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div id="newUserForm">
+        ...
+      </div>
+      
+    </div>
+  </div>
+</div>   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

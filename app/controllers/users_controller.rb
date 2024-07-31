@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :set_user, only: %i[ show edit update destroy ]
-
+  skip_before_action :verify_authenticity_token
   # GET /users or /users.json
   def index
     @users = User.all
@@ -25,7 +25,7 @@ class UsersController < ApplicationController
 
   # POST /users or /users.json
   def create
-    byebug
+    
     @user = User.new(user_params)
 
     respond_to do |format|
@@ -59,6 +59,17 @@ class UsersController < ApplicationController
     respond_to do |format|
       format.html { redirect_to users_url, notice: "User was successfully destroyed." }
       format.json { head :no_content }
+    end
+  end
+
+  def bulk_delete
+    
+    respond_to do |format|
+      @users =User.where(id: params[:user_ids])
+      @users.delete_all
+      
+      format.json { render json: { deleted_user_ids: params[:user_ids] } }
+       
     end
   end
 

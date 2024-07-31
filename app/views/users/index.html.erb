@@ -19,7 +19,14 @@
 
           <tbody>
             <% @users.each do |user| %>
-              <tr>
+              <tr id="user-row-<%= user.id%>">
+                <td>
+                  <div class="form-check">
+                    <input type="checkbox" class="form-check-input user-select-check" 
+                    id="user_<%=user.id%>" data-user-id="<%= user.id%>">
+                    <label class="form-check-label" for="user_<%=user.id%>"></label>
+                  </div>
+                </td>  
                 <td><%= user.name%></td>
                 <td><%= user.email%></td>
                 <td><%= user.contact%></td>
@@ -30,6 +37,7 @@
             <%end%>
           </tbody>
         </table>
+        <button type="button" class="btn btn-danger" id="delete-users" style="display: none;">Delete Users</button>
       </div>
 
     </div>
@@ -58,6 +66,61 @@
 </div>   
 
 
+<script>
+  $(document).ready(function(){
+    debugger
+    var counter = 0;
+    $('.user-select-check').on('click' , function(){
+      if($(this).prop('checked')){
+        counter += 1;
+        $("#delete-users").show();
+      } else {
+        counter -= 1;
+        if(counter <= 0) {
+          $("#delete-users").hide();
+        }
+      }
+    });
+
+    $("#delete-users").on('click', function(){
+      var userIds = [];
+      $('.user-select-check').each(function(){
+        if($(this).prop('checked')) {
+          userIds.push($(this).data('user-id'))
+          
+        }
+      });
+      $.ajax({
+        url: 'users/bulk_delete',
+        type: 'DELETE',
+        data: JSON.stringify({ user_ids: userIds }),  
+        contentType: 'application/json', 
+        dataType: 'json',
+        
+        success: function(response) {
+          console.log("Response from server:", response); 
+          if(response.deleted_user_ids && response.deleted_user_ids.length > 0) {
+            response.deleted_user_ids.forEach(function(id) {
+             
+             $('#user-row-' + id).remove();
+            });
+          }
+          
+
+          counter = 0;
+          $("#delete-users").hide();
+        },
+        error: function(xhr, status, error) {
+          alert('An error occurred while deleting users: ' + error);
+        }
+      });
+      
+    });
+
+
+  });
+
+</script>
 
 
 
